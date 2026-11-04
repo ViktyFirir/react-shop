@@ -6,7 +6,7 @@ import logoArrow from '../../assets/header-asssets/Arrow.png';
 import logoBasket from '../../assets/header-asssets/basket.svg';
 import logoSearch from '../../assets/header-asssets/search.svg';
 
-function Header({ search, onSearchChange }) {
+function Header({ search, onSearchChange, cartCount, onCartClick }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -14,7 +14,6 @@ function Header({ search, onSearchChange }) {
       <button
         className="header__burger"
         aria-label="Меню"
-        aria-expanded={isMenuOpen}
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
         <span></span>
@@ -42,15 +41,20 @@ function Header({ search, onSearchChange }) {
         <input
           type="text"
           className="header__search-input"
-          placeholder="Search for products..."
-  value={search}
-  onChange={(event) => onSearchChange(event.target.value)}
+          placeholder="Искать товар"
+          value={search}
+          onChange={(event) => onSearchChange(event.target.value)}
         />
       </div>
 
       <div className="header__actions">
-        <button className="header__action-btn" aria-label="Cart">
-          <img src={logoBasket} alt="Cart" />
+        <button
+          className="header__action-btn header__cart"
+          aria-label="Корзина"
+          onClick={onCartClick}
+        >
+          <img src={logoBasket} alt="" />
+          {cartCount > 0 && <span className="header__badge">{cartCount}</span>}
         </button>
         <button className="header__action-btn" aria-label="Profile">
           <img src={logoAcc} alt="Profile" />

@@ -3,7 +3,14 @@ import Header from './components/Header/Header'
 import ProductCard from './components/ProductCard/ProductCard'
 import Sidebar from './components/Sidebar/Sidebar'
 import ProductModal from './components/ProductModal/ProductModal'
+import CartPanel from './components/CartPanel/CartPanel'
 import './App.css'
+
+function loadCart() {
+  const saved = localStorage.getItem('cart')
+  if (saved === null) return []
+  return JSON.parse(saved)
+}
 
 function App() {
   const [products, setProducts] = useState([])
@@ -19,10 +26,63 @@ function App() {
 
   const [selectedProduct, setSelectedProduct] = useState(null)
 
+  const [cart, setCart] = useState(loadCart())
+  const [isCartOpen, setIsCartOpen] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart))
+  }, [cart])
+
+  const addToCart = (product) => {
+    const found = cart.find((item) => item.id === product.id)
+
+    if (found) {
+      const newCart = cart.map((item) => {
+        if (item.id === product.id) {
+          return { ...item, quantity: item.quantity + 1 }
+        }
+        return item
+      })
+      setCart(newCart)
+    } else {
+      const newItem = {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        thumbnail: product.thumbnail,
+        quantity: 1,
+      }
+      setCart([...cart, newItem])
+    }
+  }
+
+  const changeQuantity = (id, delta) => {
+    const newCart = cart.map((item) => {
+      if (item.id === id) {
+        const newQuantity = item.quantity + delta
+        if (newQuantity < 1) return item
+        return { ...item, quantity: newQuantity }
+      }
+      return item
+    })
+    setCart(newCart)
+  }
+
+  const removeFromCart = (id) => {
+    setCart(cart.filter((item) => item.id !== id))
+  }
+
+  let cartCount = 0
+  let cartTotal = 0
+  cart.forEach((item) => {
+    cartCount += item.quantity
+    cartTotal += item.price * item.quantity
+  })
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://dummyjson.com/products?limit=100')
+        const response = await fetch('https://dummyjson.com/products?limit=30')
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
@@ -76,7 +136,12 @@ function App() {
 
   return (
     <>
-      <Header search={search} onSearchChange={setSearch} />
+      <Header
+        search={search}
+        onSearchChange={setSearch}
+        cartCount={cartCount}
+        onCartClick={() => setIsCartOpen(true)}
+      />
       <main className="main">
         <Sidebar
           categories={categories}
@@ -122,6 +187,7 @@ function App() {
                 rating={product.rating}
                 image={product.thumbnail}
                 onClick={() => setSelectedProduct(product)}
+                onAddToCart={() => addToCart(product)}
               />
             ))}
           </div>
@@ -132,6 +198,17 @@ function App() {
         <ProductModal
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
+          onAddToCart={addToCart}
+        />
+      )}
+
+      {isCartOpen && (
+        <CartPanel
+          items={cart}
+          total={cartTotal}
+          onClose={() => setIsCartOpen(false)}
+          onChangeQuantity={changeQuantity}
+          onRemove={removeFromCart}
         />
       )}
     </>

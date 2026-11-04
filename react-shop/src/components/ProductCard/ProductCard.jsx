@@ -1,16 +1,13 @@
 import './ProductCard.css';
 
-function ProductCard({ title, price, rating, image, onClick }) {
+function ProductCard({ title, price, rating, image, onClick, onAddToCart }) {
+  const handleAdd = (event) => {
+    event.stopPropagation();
+    onAddToCart();
+  };
+
   return (
-    <article
-      className="product-card"
-      onClick={onClick}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter') onClick();
-      }}
-      tabIndex={0}
-      role="button"
-    >
+    <article className="product-card" onClick={onClick}>
       <div className="product-card__image-wrapper">
         <img className="product-card__image" src={image} alt={title} />
       </div>
@@ -19,6 +16,9 @@ function ProductCard({ title, price, rating, image, onClick }) {
         <span className="product-card__star">★</span> {rating.toFixed(1)}/5
       </div>
       <p className="product-card__price">${price.toFixed(2)}</p>
+      <button className="product-card__btn" onClick={handleAdd}>
+        В корзину
+      </button>
     </article>
   );
 }
