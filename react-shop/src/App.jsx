@@ -82,7 +82,7 @@ function App() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://dummyjson.com/products?limit=30')
+        const response = await fetch('https://dummyjson.com/products?limit=100')
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
