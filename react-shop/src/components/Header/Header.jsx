@@ -6,7 +6,7 @@ import logoArrow from '../../assets/header-asssets/Arrow.png';
 import logoBasket from '../../assets/header-asssets/basket.svg';
 import logoSearch from '../../assets/header-asssets/search.svg';
 
-function Header() {
+function Header({ search, onSearchChange }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -43,6 +43,8 @@ function Header() {
           type="text"
           className="header__search-input"
           placeholder="Search for products..."
+  value={search}
+  onChange={(event) => onSearchChange(event.target.value)}
         />
       </div>
 
