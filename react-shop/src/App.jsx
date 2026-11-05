@@ -4,6 +4,10 @@ import ProductCard from './components/ProductCard/ProductCard'
 import Sidebar from './components/Sidebar/Sidebar'
 import ProductModal from './components/ProductModal/ProductModal'
 import CartPanel from './components/CartPanel/CartPanel'
+import CatalogPage from './pages/CatalogPage'
+import CartPage from './pages/CartPage'
+
+import { Routes, Route } from 'react-router'
 import './App.css'
 
 function loadCart() {
@@ -142,6 +146,10 @@ function App() {
         cartCount={cartCount}
         onCartClick={() => setIsCartOpen(true)}
       />
+      <Routes>
+  <Route path="/" element={<CatalogPage />} />
+  <Route path="/cart" element={<CartPage />} />
+</Routes>
       <main className="main">
         <Sidebar
           categories={categories}
