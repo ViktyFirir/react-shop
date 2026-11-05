@@ -1,19 +1,21 @@
-import { useState } from 'react';
-import './Header.css';
 
-import logoAcc from '../../assets/header-asssets/acc.svg';
-import logoArrow from '../../assets/header-asssets/Arrow.png';
-import logoBasket from '../../assets/header-asssets/basket.svg';
-import logoSearch from '../../assets/header-asssets/search.svg';
+import { useState } from 'react'
+import { Link } from 'react-router'
+import './Header.css'
+
+import logoAcc from '../../assets/header-asssets/acc.svg'
+import logoArrow from '../../assets/header-asssets/Arrow.png'
+import logoBasket from '../../assets/header-asssets/basket.svg'
+import logoSearch from '../../assets/header-asssets/search.svg'
 
 function Header({ search, onSearchChange, cartCount, onCartClick }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
     <header className="header">
       <button
         className="header__burger"
-        aria-label="Меню"
+        aria-label="Menu"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
         <span></span>
@@ -21,27 +23,54 @@ function Header({ search, onSearchChange, cartCount, onCartClick }) {
         <span></span>
       </button>
 
-      <div className="header__logo">SHOP.CO</div>
+      <Link
+        to="/"
+        className="header__logo"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        SHOP.CO
+      </Link>
 
       <nav
         className={`header__nav ${isMenuOpen ? 'header__nav--open' : ''}`}
         onClick={() => setIsMenuOpen(false)}
       >
         <div className="header__link-wrapper">
-          <a href="#" className="header__link">Shop</a>
-          <img src={logoArrow} alt="" className="header__dropdown-icon" />
+          <Link to="/" className="header__link">
+            Shop
+          </Link>
+
+          <img
+            src={logoArrow}
+            alt=""
+            className="header__dropdown-icon"
+          />
         </div>
-        <a href="#" className="header__link">On Sale</a>
-        <a href="#" className="header__link">New Arrivals</a>
-        <a href="#" className="header__link">Brands</a>
+
+        <Link to="/" className="header__link">
+          On Sale
+        </Link>
+
+        <Link to="/" className="header__link">
+          New Arrivals
+        </Link>
+
+        <Link to="/" className="header__link">
+          Brands
+        </Link>
       </nav>
 
       <div className="header__search-container">
-        <img src={logoSearch} alt="" className="header__search-icon" />
+        <img
+          src={logoSearch}
+          alt=""
+          className="header__search-icon"
+        />
+
         <input
           type="text"
           className="header__search-input"
-          placeholder="Искать товар"
+          placeholder="Search for products..."
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
         />
@@ -50,18 +79,27 @@ function Header({ search, onSearchChange, cartCount, onCartClick }) {
       <div className="header__actions">
         <button
           className="header__action-btn header__cart"
-          aria-label="Корзина"
+          aria-label="Shopping cart"
           onClick={onCartClick}
         >
           <img src={logoBasket} alt="" />
-          {cartCount > 0 && <span className="header__badge">{cartCount}</span>}
+
+          {cartCount > 0 && (
+            <span className="header__badge">
+              {cartCount}
+            </span>
+          )}
         </button>
-        <button className="header__action-btn" aria-label="Profile">
+
+        <button
+          className="header__action-btn"
+          aria-label="Profile"
+        >
           <img src={logoAcc} alt="Profile" />
         </button>
       </div>
     </header>
-  );
+  )
 }
 
-export default Header;
+export default Header

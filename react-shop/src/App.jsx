@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react'
 import Header from './components/Header/Header'
 import CartPage from './pages/CartPage'
 import CatalogPage from './pages/CatalogPage'
-
+import NotFoundPage from './pages/NotFoundPage'
 import ProductPage from './pages/ProductPage'
 
-import { Routes, Route, useNavigate } from 'react-router'
+import { Routes, Route, useNavigate , Navigate } from 'react-router'
 import './App.css'
+
 
 function loadCart() {
   try {
@@ -171,51 +172,52 @@ const navigate = useNavigate()
       />
 
       <Routes>
-        <Route
-          path="/"
-          element={
-            <CatalogPage
-              categories={categories}
-              category={category}
-              setCategory={setCategory}
-              bounds={bounds}
-              currentMin={currentMin}
-              currentMax={currentMax}
-              setPriceMin={setPriceMin}
-              setPriceMax={setPriceMax}
-              sort={sort}
-              setSort={setSort}
-              visibleProducts={visibleProducts}
-              loading={loading}
-              error={error}
-              addToCart={addToCart}
-            />
-          }
-        />
-
-        <Route
-          path="/product/:id"
-          element={<ProductPage onAddToCart={addToCart} />}
-        />
-
-        <Route
-          path="/cart"
-          
-          element={
-  <CartPage
-    items={cart}
-    total={cartTotal}
-    onChangeQuantity={changeQuantity}
-    onRemove={removeFromCart}
+  <Route
+    path="/"
+    index
+    element={
+      <CatalogPage
+        categories={categories}
+        category={category}
+        setCategory={setCategory}
+        bounds={bounds}
+        currentMin={currentMin}
+        currentMax={currentMax}
+        setPriceMin={setPriceMin}
+        setPriceMax={setPriceMax}
+        sort={sort}
+        setSort={setSort}
+        visibleProducts={visibleProducts}
+        loading={loading}
+        error={error}
+        addToCart={addToCart}
+      />
+    }
   />
-}
-        />
 
-        <Route
-          path="*"
-          element={<h1>Страница не найдена (404)</h1>}
-        />
-      </Routes>
+  <Route
+    path="/product/:id"
+    element={<ProductPage onAddToCart={addToCart} />}
+  />
+
+  <Route
+    path="/cart"
+    element={
+      <CartPage
+        items={cart}
+        total={cartTotal}
+        onChangeQuantity={changeQuantity}
+        onRemove={removeFromCart}
+      />
+    }
+  />
+
+  <Route
+    path="*"
+    element={<NotFoundPage />}
+  />
+</Routes>
+
 
       
     </>

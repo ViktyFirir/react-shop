@@ -1,13 +1,21 @@
-
 import Sidebar from '../components/Sidebar/Sidebar'
 import ProductCard from '../components/ProductCard/ProductCard'
 import { useNavigate } from 'react-router'
 
 function CatalogPage({
-  categories, category, setCategory,
-  bounds, currentMin, currentMax, setPriceMin, setPriceMax,
-  sort, setSort,
-  visibleProducts, loading, error,
+  categories,
+  category,
+  setCategory,
+  bounds,
+  currentMin,
+  currentMax,
+  setPriceMin,
+  setPriceMax,
+  sort,
+  setSort,
+  visibleProducts,
+  loading,
+  error,
   addToCart,
 }) {
   const navigate = useNavigate()
@@ -30,46 +38,48 @@ function CatalogPage({
 
         <section className="content">
           <div className="content__top">
-            <h1 className="content__title">Товары</h1>
+            <h1 className="content__title">Products</h1>
 
             <select
               className="content__sort"
               value={sort}
               onChange={(event) => setSort(event.target.value)}
             >
-              <option value="default">По умолчанию</option>
-              <option value="price-asc">Сначала дешевле</option>
-              <option value="price-desc">Сначала дороже</option>
-              <option value="rating">По рейтингу</option>
+              <option value="default">Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating">By Rating</option>
             </select>
           </div>
 
           {loading && (
-            <p className="status">Загрузка товаров...</p>
+            <p className="status">Loading products...</p>
           )}
 
           {error && (
             <p className="status status--error">
-              Ошибка загрузки товаров: {error}
+              Error loading products: {error}
             </p>
           )}
 
           {!loading && !error && visibleProducts.length === 0 && (
-            <p className="status">Ничего не найдено</p>
+            <p className="status">No products found</p>
           )}
 
           <div className="products-grid">
-            {!loading && !error && visibleProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                title={product.title}
-                price={product.price}
-                rating={product.rating}
-                image={product.thumbnail}
-                onClick={() => navigate(`/product/${product.id}`)}
-                onAddToCart={() => addToCart(product)}
-              />
-            ))}
+            {!loading &&
+              !error &&
+              visibleProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  title={product.title}
+                  price={product.price}
+                  rating={product.rating}
+                  image={product.thumbnail}
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  onAddToCart={() => addToCart(product)}
+                />
+              ))}
           </div>
         </section>
       </main>

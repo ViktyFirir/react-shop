@@ -17,7 +17,7 @@ function ProductCard({ title, price, rating, image, onClick, onAddToCart }) {
       </div>
       <p className="product-card__price">${price.toFixed(2)}</p>
       <button className="product-card__btn" onClick={handleAdd}>
-        В корзину
+        Add to Cart
       </button>
     </article>
   );
