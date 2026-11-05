@@ -1,19 +1,20 @@
 
 import Sidebar from '../components/Sidebar/Sidebar'
 import ProductCard from '../components/ProductCard/ProductCard'
-
+import { useNavigate } from 'react-router'
 
 function CatalogPage({
   categories, category, setCategory,
   bounds, currentMin, currentMax, setPriceMin, setPriceMax,
   sort, setSort,
   visibleProducts, loading, error,
-  setSelectedProduct, addToCart,
-})
-{
-    return (
-      <>
-        <main className="main">
+  addToCart,
+}) {
+  const navigate = useNavigate()
+
+  return (
+    <>
+      <main className="main">
         <Sidebar
           categories={categories}
           activeCategory={category}
@@ -29,7 +30,8 @@ function CatalogPage({
 
         <section className="content">
           <div className="content__top">
-            <h1 className="content__title">Products</h1>
+            <h1 className="content__title">Товары</h1>
+
             <select
               className="content__sort"
               value={sort}
@@ -42,8 +44,15 @@ function CatalogPage({
             </select>
           </div>
 
-          {loading && <p className="status">Loading products...</p>}
-          {error && <p className="status status--error">Error loading products: {error}</p>}
+          {loading && (
+            <p className="status">Загрузка товаров...</p>
+          )}
+
+          {error && (
+            <p className="status status--error">
+              Ошибка загрузки товаров: {error}
+            </p>
+          )}
 
           {!loading && !error && visibleProducts.length === 0 && (
             <p className="status">Ничего не найдено</p>
@@ -57,16 +66,15 @@ function CatalogPage({
                 price={product.price}
                 rating={product.rating}
                 image={product.thumbnail}
-                onClick={() => setSelectedProduct(product)}
+                onClick={() => navigate(`/product/${product.id}`)}
                 onAddToCart={() => addToCart(product)}
               />
             ))}
           </div>
         </section>
       </main>
-
-     
-    </>     
-    )
+    </>
+  )
 }
+
 export default CatalogPage

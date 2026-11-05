@@ -1,17 +1,21 @@
+
 import { useState, useEffect } from 'react'
 import Header from './components/Header/Header'
-import ProductModal from './components/ProductModal/ProductModal'
 import CartPanel from './components/CartPanel/CartPanel'
 import CatalogPage from './pages/CatalogPage'
 import CartPage from './pages/CartPage'
+import ProductPage from './pages/ProductPage'
 
 import { Routes, Route } from 'react-router'
 import './App.css'
 
 function loadCart() {
-  const saved = localStorage.getItem('cart')
-  if (saved === null) return []
-  return JSON.parse(saved)
+  try {
+    const saved = localStorage.getItem('cart')
+    return saved ? JSON.parse(saved) : []
+  } catch {
+    return []
+  }
 }
 
 function App() {
@@ -26,9 +30,7 @@ function App() {
   const [priceMin, setPriceMin] = useState(null)
   const [priceMax, setPriceMax] = useState(null)
 
-  const [selectedProduct, setSelectedProduct] = useState(null)
-
-  const [cart, setCart] = useState(loadCart())
+  const [cart, setCart] = useState(loadCart)
   const [isCartOpen, setIsCartOpen] = useState(false)
 
   useEffect(() => {
@@ -45,6 +47,7 @@ function App() {
         }
         return item
       })
+
       setCart(newCart)
     } else {
       const newItem = {
@@ -54,6 +57,7 @@ function App() {
         thumbnail: product.thumbnail,
         quantity: 1,
       }
+
       setCart([...cart, newItem])
     }
   }
@@ -62,11 +66,15 @@ function App() {
     const newCart = cart.map((item) => {
       if (item.id === id) {
         const newQuantity = item.quantity + delta
+
         if (newQuantity < 1) return item
+
         return { ...item, quantity: newQuantity }
       }
+
       return item
     })
+
     setCart(newCart)
   }
 
@@ -76,6 +84,7 @@ function App() {
 
   let cartCount = 0
   let cartTotal = 0
+
   cart.forEach((item) => {
     cartCount += item.quantity
     cartTotal += item.price * item.quantity
@@ -84,10 +93,14 @@ function App() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://dummyjson.com/products?limit=100')
+        const response = await fetch(
+          'https://dummyjson.com/products?limit=100'
+        )
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
+
         const data = await response.json()
         setProducts(data.products)
       } catch (err) {
@@ -96,26 +109,36 @@ function App() {
         setLoading(false)
       }
     }
+
     fetchProducts()
   }, [])
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('https://dummyjson.com/products/category-list')
+        const response = await fetch(
+          'https://dummyjson.com/products/category-list'
+        )
+
         if (!response.ok) return
+
         const data = await response.json()
         setCategories(data)
       } catch (err) {
         console.error(err)
       }
     }
+
     fetchCategories()
   }, [])
 
   const prices = products.map((p) => p.price)
+
   const bounds = products.length
-    ? { min: Math.floor(Math.min(...prices)), max: Math.ceil(Math.max(...prices)) }
+    ? {
+        min: Math.floor(Math.min(...prices)),
+        max: Math.ceil(Math.max(...prices)),
+      }
     : { min: 0, max: 0 }
 
   const currentMin = priceMin ?? bounds.min
@@ -144,38 +167,45 @@ function App() {
         cartCount={cartCount}
         onCartClick={() => setIsCartOpen(true)}
       />
+
       <Routes>
-  <Route
-  path="/"
-  element={
-    <CatalogPage
-      categories={categories}
-      category={category}
-      setCategory={setCategory}
-      bounds={bounds}
-      currentMin={currentMin}
-      currentMax={currentMax}
-      setPriceMin={setPriceMin}
-      setPriceMax={setPriceMax}
-      sort={sort}
-      setSort={setSort}
-      visibleProducts={visibleProducts}
-      loading={loading}
-      error={error}
-      setSelectedProduct={setSelectedProduct}
-      addToCart={addToCart}
-    />
-  }
-/>
-  <Route path="/cart" element={<CartPage />} />
-</Routes>
-       {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          onAddToCart={addToCart}
+        <Route
+          path="/"
+          element={
+            <CatalogPage
+              categories={categories}
+              category={category}
+              setCategory={setCategory}
+              bounds={bounds}
+              currentMin={currentMin}
+              currentMax={currentMax}
+              setPriceMin={setPriceMin}
+              setPriceMax={setPriceMax}
+              sort={sort}
+              setSort={setSort}
+              visibleProducts={visibleProducts}
+              loading={loading}
+              error={error}
+              addToCart={addToCart}
+            />
+          }
         />
-      )}
+
+        <Route
+          path="/product/:id"
+          element={<ProductPage onAddToCart={addToCart} />}
+        />
+
+        <Route
+          path="/cart"
+          element={<CartPage />}
+        />
+
+        <Route
+          path="*"
+          element={<h1>Страница не найдена (404)</h1>}
+        />
+      </Routes>
 
       {isCartOpen && (
         <CartPanel
