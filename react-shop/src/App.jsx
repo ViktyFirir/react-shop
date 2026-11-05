@@ -1,12 +1,12 @@
 
 import { useState, useEffect } from 'react'
 import Header from './components/Header/Header'
-import CartPanel from './components/CartPanel/CartPanel'
-import CatalogPage from './pages/CatalogPage'
 import CartPage from './pages/CartPage'
+import CatalogPage from './pages/CatalogPage'
+
 import ProductPage from './pages/ProductPage'
 
-import { Routes, Route } from 'react-router'
+import { Routes, Route, useNavigate } from 'react-router'
 import './App.css'
 
 function loadCart() {
@@ -19,6 +19,8 @@ function loadCart() {
 }
 
 function App() {
+const navigate = useNavigate()
+
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
@@ -31,7 +33,6 @@ function App() {
   const [priceMax, setPriceMax] = useState(null)
 
   const [cart, setCart] = useState(loadCart)
-  const [isCartOpen, setIsCartOpen] = useState(false)
 
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart))
@@ -164,8 +165,9 @@ function App() {
       <Header
         search={search}
         onSearchChange={setSearch}
+        
         cartCount={cartCount}
-        onCartClick={() => setIsCartOpen(true)}
+        onCartClick={() => navigate('/cart')}
       />
 
       <Routes>
@@ -198,7 +200,15 @@ function App() {
 
         <Route
           path="/cart"
-          element={<CartPage />}
+          
+          element={
+  <CartPage
+    items={cart}
+    total={cartTotal}
+    onChangeQuantity={changeQuantity}
+    onRemove={removeFromCart}
+  />
+}
         />
 
         <Route
@@ -207,15 +217,7 @@ function App() {
         />
       </Routes>
 
-      {isCartOpen && (
-        <CartPanel
-          items={cart}
-          total={cartTotal}
-          onClose={() => setIsCartOpen(false)}
-          onChangeQuantity={changeQuantity}
-          onRemove={removeFromCart}
-        />
-      )}
+      
     </>
   )
 }
