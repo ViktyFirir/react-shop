@@ -1,0 +1,131 @@
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.cart {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  padding: var(--spacing-2xl);
+  background: var(--color-background);
+}
+
+.cart__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xl);
+}
+
+.cart__title { margin: 0; font-size: var(--font-title); }
+
+.cart__close {
+  border: none;
+  background: none;
+  font-size: 32px;
+  line-height: 1;
+}
+
+.cart__empty { color: var(--color-muted); }
+
+.cart__list {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.cart__item {
+  display: flex;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.cart__image {
+  flex: 0 0 80px;
+  height: 80px;
+  border-radius: 12px;
+  background: var(--color-image-bg);
+  overflow: hidden;
+}
+
+.cart__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cart__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cart__name {
+  margin: 0;
+  font-weight: 700;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cart__price { margin: 0; font-weight: 700; }
+
+.cart__counter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  align-self: flex-start;
+  padding: 4px 14px;
+  border-radius: var(--radius-button);
+  background: #f0f0f0;
+}
+
+.cart__counter button {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.cart__counter button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.cart__remove {
+  align-self: flex-start;
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--radius-button);
+  background: #ff3333;
+  color: #fff;
+  font-size: var(--font-small);
+}
+
+.cart__remove:hover {
+  opacity: 0.8;
+}
+
+.cart__remove:focus-visible {
+  outline: 2px solid #ff3333;
+  outline-offset: 2px;
+}
+
+.cart__footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid #e6e6e6;
+  font-size: var(--font-price);
+}
