@@ -1,14 +1,14 @@
 
 import { useState, useEffect } from 'react'
+import { Routes, Route, useNavigate, useSearchParams } from 'react-router'
+
 import Header from './components/Header/Header'
 import CartPage from './pages/CartPage'
 import CatalogPage from './pages/CatalogPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ProductPage from './pages/ProductPage'
 
-import { Routes, Route, useNavigate , Navigate } from 'react-router'
 import './App.css'
-
 
 function loadCart() {
   try {
@@ -20,14 +20,28 @@ function loadCart() {
 }
 
 function App() {
-const navigate = useNavigate()
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const search = searchParams.get('q') || ''
+
+  const setSearch = (value) => {
+    const params = new URLSearchParams(searchParams)
+
+    if (value.trim() === '') {
+      params.delete('q')
+    } else {
+      params.set('q', value)
+    }
+
+    setSearchParams(params)
+  }
 
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
   const [sort, setSort] = useState('default')
   const [priceMin, setPriceMin] = useState(null)
@@ -166,60 +180,55 @@ const navigate = useNavigate()
       <Header
         search={search}
         onSearchChange={setSearch}
-        
         cartCount={cartCount}
         onCartClick={() => navigate('/cart')}
       />
 
       <Routes>
-  <Route
-    path="/"
-    index
-    element={
-      <CatalogPage
-        categories={categories}
-        category={category}
-        setCategory={setCategory}
-        bounds={bounds}
-        currentMin={currentMin}
-        currentMax={currentMax}
-        setPriceMin={setPriceMin}
-        setPriceMax={setPriceMax}
-        sort={sort}
-        setSort={setSort}
-        visibleProducts={visibleProducts}
-        loading={loading}
-        error={error}
-        addToCart={addToCart}
-      />
-    }
-  />
+        <Route
+          path="/"
+          element={
+            <CatalogPage
+              categories={categories}
+              category={category}
+              setCategory={setCategory}
+              bounds={bounds}
+              currentMin={currentMin}
+              currentMax={currentMax}
+              setPriceMin={setPriceMin}
+              setPriceMax={setPriceMax}
+              sort={sort}
+              setSort={setSort}
+              visibleProducts={visibleProducts}
+              loading={loading}
+              error={error}
+              addToCart={addToCart}
+            />
+          }
+        />
 
-  <Route
-    path="/product/:id"
-    element={<ProductPage onAddToCart={addToCart} />}
-  />
+        <Route
+          path="/product/:id"
+          element={<ProductPage onAddToCart={addToCart} />}
+        />
 
-  <Route
-    path="/cart"
-    element={
-      <CartPage
-        items={cart}
-        total={cartTotal}
-        onChangeQuantity={changeQuantity}
-        onRemove={removeFromCart}
-      />
-    }
-  />
+        <Route
+          path="/cart"
+          element={
+            <CartPage
+              items={cart}
+              total={cartTotal}
+              onChangeQuantity={changeQuantity}
+              onRemove={removeFromCart}
+            />
+          }
+        />
 
-  <Route
-    path="*"
-    element={<NotFoundPage />}
-  />
-</Routes>
-
-
-      
+        <Route
+          path="*"
+          element={<NotFoundPage />}
+        />
+      </Routes>
     </>
   )
 }
