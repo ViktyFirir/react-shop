@@ -1,26 +1,32 @@
-import './ProductCard.css';
+import { Link } from 'react-router'
+import './ProductCard.css'
 
-function ProductCard({ title, price, rating, image, onClick, onAddToCart }) {
-  const handleAdd = (event) => {
-    event.stopPropagation();
-    onAddToCart();
-  };
-
+function ProductCard({ productId, title, price, rating, image, onAddToCart }) {
   return (
-    <article className="product-card" onClick={onClick}>
-      <div className="product-card__image-wrapper">
-        <img className="product-card__image" src={image} alt={title} />
-      </div>
-      <h3 className="product-card__title">{title}</h3>
-      <div className="product-card__rating">
-        <span className="product-card__star">★</span> {rating.toFixed(1)}/5
-      </div>
-      <p className="product-card__price">${price.toFixed(2)}</p>
-      <button className="product-card__btn" onClick={handleAdd}>
+    <article className="product-card">
+      <Link to={`/product/${productId}`} className="product-card__link">
+        <div className="product-card__image-wrapper">
+          <img className="product-card__image" src={image} alt={title} />
+        </div>
+
+        <h3 className="product-card__title">{title}</h3>
+
+        <div className="product-card__rating">
+          <span className="product-card__star">★</span> {rating.toFixed(1)}/5
+        </div>
+
+        <p className="product-card__price">${price.toFixed(2)}</p>
+      </Link>
+
+      <button
+        className="product-card__btn"
+        type="button"
+        onClick={onAddToCart}
+      >
         Add to Cart
       </button>
     </article>
-  );
+  )
 }
 
-export default ProductCard;
+export default ProductCard
