@@ -24,6 +24,7 @@ function App() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = searchParams.get('q') || ''
+  const category = searchParams.get('category') || 'all'
 
   const setSearch = (value) => {
     const params = new URLSearchParams(searchParams)
@@ -37,12 +38,23 @@ function App() {
     setSearchParams(params)
   }
 
+  const setCategory = (value) => {
+    const params = new URLSearchParams(searchParams)
+
+    if (value === 'all') {
+      params.delete('category')
+    } else {
+      params.set('category', value)
+    }
+
+    setSearchParams(params)
+  }
+
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const [category, setCategory] = useState('all')
   const [sort, setSort] = useState('default')
   const [priceMin, setPriceMin] = useState(null)
   const [priceMax, setPriceMax] = useState(null)
@@ -61,6 +73,7 @@ function App() {
         if (item.id === product.id) {
           return { ...item, quantity: item.quantity + 1 }
         }
+
         return item
       })
 
@@ -172,6 +185,7 @@ function App() {
     if (sort === 'price-asc') return a.price - b.price
     if (sort === 'price-desc') return b.price - a.price
     if (sort === 'rating') return b.rating - a.rating
+
     return 0
   })
 
