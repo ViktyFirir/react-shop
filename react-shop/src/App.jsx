@@ -25,6 +25,7 @@ function App() {
 
   const search = searchParams.get('q') || ''
   const category = searchParams.get('category') || 'all'
+  const sort = searchParams.get('sort') || 'default'
 
   const setSearch = (value) => {
     const params = new URLSearchParams(searchParams)
@@ -50,12 +51,23 @@ function App() {
     setSearchParams(params)
   }
 
+  const setSort = (value) => {
+    const params = new URLSearchParams(searchParams)
+
+    if (value === 'default') {
+      params.delete('sort')
+    } else {
+      params.set('sort', value)
+    }
+
+    setSearchParams(params)
+  }
+
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const [sort, setSort] = useState('default')
   const [priceMin, setPriceMin] = useState(null)
   const [priceMax, setPriceMax] = useState(null)
 
