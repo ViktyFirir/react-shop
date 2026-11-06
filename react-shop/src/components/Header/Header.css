@@ -38,6 +38,7 @@
   letter-spacing: -0.5px;
   color: var(--color-text);
   white-space: nowrap;
+  text-decoration: none;
 }
 
 .header__nav {
