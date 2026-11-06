@@ -2,7 +2,17 @@
 import { Link } from 'react-router'
 import './CartPage.css'
 
-function CartPage({ items, total, onChangeQuantity, onRemove }) {
+function CartPage({ items = [], onChangeQuantity, onRemove }) {
+  const total = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  )
+
+  const itemCount = items.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  )
+
   return (
     <main className="cart-page">
       <div className="cart-breadcrumbs">
@@ -15,11 +25,11 @@ function CartPage({ items, total, onChangeQuantity, onRemove }) {
 
       {items.length === 0 ? (
         <div className="cart-empty">
-          <h2>Ваша корзина пуста</h2>
-          <p>Добавьте товары из каталога, чтобы продолжить покупки.</p>
+          <h2>Your cart is empty</h2>
+          <p>Add products from the catalog to continue shopping.</p>
 
           <Link to="/" className="cart-empty__button">
-            Перейти в каталог
+            Go to Catalog
           </Link>
         </div>
       ) : (
@@ -38,7 +48,7 @@ function CartPage({ items, total, onChangeQuantity, onRemove }) {
                     <button
                       className="cart-product__remove"
                       onClick={() => onRemove(item.id)}
-                      aria-label={`Удалить ${item.title}`}
+                      aria-label={`Remove ${item.title}`}
                     >
                       ×
                     </button>
@@ -56,7 +66,8 @@ function CartPage({ items, total, onChangeQuantity, onRemove }) {
                     <div className="cart-quantity">
                       <button
                         onClick={() => onChangeQuantity(item.id, -1)}
-                        disabled={item.quantity === 1}
+                        disabled={item.quantity <= 1}
+                        aria-label="Decrease quantity"
                       >
                         −
                       </button>
@@ -65,6 +76,7 @@ function CartPage({ items, total, onChangeQuantity, onRemove }) {
 
                       <button
                         onClick={() => onChangeQuantity(item.id, 1)}
+                        aria-label="Increase quantity"
                       >
                         +
                       </button>
@@ -80,7 +92,7 @@ function CartPage({ items, total, onChangeQuantity, onRemove }) {
 
             <div className="summary-row">
               <span>Items</span>
-              <strong>{items.reduce((sum, item) => sum + item.quantity, 0)}</strong>
+              <strong>{itemCount}</strong>
             </div>
 
             <div className="summary-divider" />
@@ -92,7 +104,8 @@ function CartPage({ items, total, onChangeQuantity, onRemove }) {
 
             <button
               className="checkout-button"
-              onClick={() => alert('Оформление заказа скоро появится!')}
+              type="button"
+              disabled
             >
               Continue
               <span>→</span>

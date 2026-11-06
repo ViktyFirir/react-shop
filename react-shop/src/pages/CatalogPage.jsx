@@ -71,14 +71,14 @@ function CatalogPage({
               !error &&
               visibleProducts.map((product) => (
                 <ProductCard
-                  key={product.id}
-                  title={product.title}
-                  price={product.price}
-                  rating={product.rating}
-                  image={product.thumbnail}
-                  onClick={() => navigate(`/product/${product.id}`)}
-                  onAddToCart={() => addToCart(product)}
-                />
+  key={product.id}
+  productId={product.id}
+  title={product.title}
+  price={product.price}
+  rating={product.rating}
+  image={product.thumbnail}
+  onAddToCart={() => addToCart(product)}
+/>
               ))}
           </div>
         </section>
