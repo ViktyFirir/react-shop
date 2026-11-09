@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router'
 import './ProductPage.css'
-import '../components/ProductModal/ProductModal.css'
 
 function ProductPage({ onAddToCart }) {
   const { id } = useParams()
@@ -73,19 +72,20 @@ function ProductPage({ onAddToCart }) {
         <span>Back to catalog</span>
       </Link>
 
-      <div className="modal product-page__layout">
-        <div className="modal__gallery">
+      <div className="product-page__layout">
+        <div className="product-page__gallery">
           {images.length > 1 && (
-            <div className="modal__thumbs">
+            <div className="product-page__thumbs">
               {images.map((src) => (
                 <button
                   key={src}
-                  className={`modal__thumb ${
+                  className={`product-page__thumb ${
                     src === activeImage
-                      ? 'modal__thumb--active'
+                      ? 'product-page__thumb--active'
                       : ''
                   }`}
                   onClick={() => setActiveImage(src)}
+                  aria-label="Select product image"
                 >
                   <img src={src} alt="" />
                 </button>
@@ -93,32 +93,32 @@ function ProductPage({ onAddToCart }) {
             </div>
           )}
 
-          <div className="modal__main-image">
+          <div className="product-page__main-image">
             <img src={activeImage} alt={product.title} />
           </div>
         </div>
 
-        <div className="modal__info">
-          <h1 className="modal__title">
+        <div className="product-page__info">
+          <h1 className="product-page__title">
             {product.title}
           </h1>
 
-          <div className="modal__rating">
-            <span className="modal__star">★</span>
+          <div className="product-page__rating">
+            <span className="product-page__star">★</span>
             <span>{product.rating.toFixed(1)}</span>
-            <span className="modal__rating-max">/5</span>
+            <span className="product-page__rating-max">/5</span>
           </div>
 
-          <p className="modal__price">
+          <p className="product-page__price">
             ${product.price.toFixed(2)}
           </p>
 
-          <p className="modal__description">
+          <p className="product-page__description">
             {product.description}
           </p>
 
           <button
-            className="modal__cart-btn"
+            className="product-page__cart-btn"
             onClick={() => onAddToCart?.(product)}
           >
             Add to cart
