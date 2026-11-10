@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route, useNavigate, useSearchParams } from 'react-router'
-
+import { Routes, Route, useNavigate, useSearchParams, useLocation } from 'react-router'
 import Header from './components/Header/Header'
 import CartPage from './pages/CartPage'
 import CatalogPage from './pages/CatalogPage'
@@ -11,6 +10,7 @@ import './App.css'
 
 function App() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = searchParams.get('q') || ''
@@ -18,22 +18,21 @@ function App() {
   const sort = searchParams.get('sort') || 'default'
 
   const setSearch = (value) => {
-    const params = new URLSearchParams(searchParams)
+  const params = new URLSearchParams(searchParams)
 
-    if (value.trim()) {
-      params.set('q', value)
-    } else {
-      params.delete('q')
-    }
-
-    const query = params.toString()
-
-    if (window.location.pathname !== '/') {
-      navigate(query ? `/?${query}` : '/')
-    } else {
-      setSearchParams(params)
-    }
+  if (value.trim()) {
+    params.set('q', value)
+  } else {
+    params.delete('q')
   }
+
+  if (location.pathname !== '/') {
+    const query = params.toString()
+    navigate(query ? `/?${query}` : '/')
+  } else {
+    setSearchParams(params, { replace: true })
+  }
+}
 
   const setCategory = (value) => {
     const params = new URLSearchParams(searchParams)
