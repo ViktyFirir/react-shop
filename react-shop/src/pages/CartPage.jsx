@@ -3,7 +3,7 @@ import { useCart } from '../cart/useCart'
 import './CartPage.css'
 
 function CartPage() {
-  const { items, totalCount, totalPrice, changeQuantity, removeItem } =
+  const { items, totalCount, totalPrice, changeQuantity, removeItem, clearCart } =
     useCart()
 
   return (
@@ -28,6 +28,14 @@ function CartPage() {
       ) : (
         <div className="cart-layout">
           <section className="cart-products">
+            <button
+              className="cart-clear"
+              type="button"
+              onClick={clearCart}
+            >
+              Clear cart
+            </button>
+
             {items.map((item) => (
               <article className="cart-product" key={item.id}>
                 <div className="cart-product__image">
