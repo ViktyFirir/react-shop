@@ -1,17 +1,10 @@
-
 import { Link } from 'react-router'
+import { useCart } from '../cart/useCart'
 import './CartPage.css'
 
-function CartPage({ items = [], onChangeQuantity, onRemove }) {
-  const total = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  )
-
-  const itemCount = items.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  )
+function CartPage() {
+  const { items, totalCount, totalPrice, changeQuantity, removeItem } =
+    useCart()
 
   return (
     <main className="cart-page">
@@ -47,7 +40,7 @@ function CartPage({ items = [], onChangeQuantity, onRemove }) {
 
                     <button
                       className="cart-product__remove"
-                      onClick={() => onRemove(item.id)}
+                      onClick={() => removeItem(item.id)}
                       aria-label={`Remove ${item.title}`}
                     >
                       ×
@@ -65,7 +58,7 @@ function CartPage({ items = [], onChangeQuantity, onRemove }) {
 
                     <div className="cart-quantity">
                       <button
-                        onClick={() => onChangeQuantity(item.id, -1)}
+                        onClick={() => changeQuantity(item.id, -1)}
                         disabled={item.quantity <= 1}
                         aria-label="Decrease quantity"
                       >
@@ -75,7 +68,7 @@ function CartPage({ items = [], onChangeQuantity, onRemove }) {
                       <span>{item.quantity}</span>
 
                       <button
-                        onClick={() => onChangeQuantity(item.id, 1)}
+                        onClick={() => changeQuantity(item.id, 1)}
                         aria-label="Increase quantity"
                       >
                         +
@@ -92,14 +85,14 @@ function CartPage({ items = [], onChangeQuantity, onRemove }) {
 
             <div className="summary-row">
               <span>Items</span>
-              <strong>{itemCount}</strong>
+              <strong>{totalCount}</strong>
             </div>
 
             <div className="summary-divider" />
 
             <div className="summary-total">
               <span>Total</span>
-              <strong>${total.toFixed(2)}</strong>
+              <strong>${totalPrice.toFixed(2)}</strong>
             </div>
 
             <button

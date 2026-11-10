@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { Routes, Route, useNavigate, useSearchParams } from 'react-router'
 
@@ -9,30 +8,6 @@ import NotFoundPage from './pages/NotFoundPage'
 import ProductPage from './pages/ProductPage'
 
 import './App.css'
-
-function loadCart() {
-  try {
-    const saved = localStorage.getItem('cart')
-
-    if (!saved) return []
-
-    const parsedCart = JSON.parse(saved)
-
-    if (!Array.isArray(parsedCart)) return []
-
-    return parsedCart.filter(
-      (item) =>
-        item &&
-        typeof item.id === 'number' &&
-        typeof item.title === 'string' &&
-        typeof item.price === 'number' &&
-        typeof item.quantity === 'number' &&
-        item.quantity > 0
-    )
-  } catch {
-    return []
-  }
-}
 
 function App() {
   const navigate = useNavigate()
@@ -91,65 +66,6 @@ function App() {
 
   const [priceMin, setPriceMin] = useState(null)
   const [priceMax, setPriceMax] = useState(null)
-
-  const [cart, setCart] = useState(loadCart)
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('cart', JSON.stringify(cart))
-    } catch (err) {
-      console.error('Failed to save cart:', err)
-    }
-  }, [cart])
-
-  const addToCart = (product) => {
-    setCart((previousCart) => {
-      const found = previousCart.find((item) => item.id === product.id)
-
-      if (found) {
-        return previousCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      }
-
-      return [
-        ...previousCart,
-        {
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          thumbnail: product.thumbnail,
-          quantity: 1,
-        },
-      ]
-    })
-  }
-
-  const changeQuantity = (id, delta) => {
-    setCart((previousCart) =>
-      previousCart.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: Math.max(1, item.quantity + delta),
-            }
-          : item
-      )
-    )
-  }
-
-  const removeFromCart = (id) => {
-    setCart((previousCart) =>
-      previousCart.filter((item) => item.id !== id)
-    )
-  }
-
-  const cartCount = cart.reduce(
-    (total, item) => total + item.quantity,
-    0
-  )
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -225,12 +141,7 @@ function App() {
 
   return (
     <>
-      <Header
-        search={search}
-        onSearchChange={setSearch}
-        cartCount={cartCount}
-        onCartClick={() => navigate('/cart')}
-      />
+      <Header search={search} onSearchChange={setSearch} />
 
       <Routes>
         <Route
@@ -250,31 +161,13 @@ function App() {
               visibleProducts={visibleProducts}
               loading={loading}
               error={error}
-              addToCart={addToCart}
             />
           }
         />
 
-        <Route
-          path="/product/:id"
-          element={<ProductPage onAddToCart={addToCart} />}
-        />
-
-        <Route
-          path="/cart"
-          element={
-            <CartPage
-              items={cart}
-              onChangeQuantity={changeQuantity}
-              onRemove={removeFromCart}
-            />
-          }
-        />
-
-        <Route
-          path="*"
-          element={<NotFoundPage />}
-        />
+        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   )

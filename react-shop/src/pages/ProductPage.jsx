@@ -1,10 +1,11 @@
-
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router'
+import { useCart } from '../cart/useCart'
 import './ProductPage.css'
 
-function ProductPage({ onAddToCart }) {
+function ProductPage() {
   const { id } = useParams()
+  const { addItem } = useCart()
 
   const [product, setProduct] = useState(null)
   const [activeImage, setActiveImage] = useState('')
@@ -99,9 +100,7 @@ function ProductPage({ onAddToCart }) {
         </div>
 
         <div className="product-page__info">
-          <h1 className="product-page__title">
-            {product.title}
-          </h1>
+          <h1 className="product-page__title">{product.title}</h1>
 
           <div className="product-page__rating">
             <span className="product-page__star">★</span>
@@ -119,7 +118,7 @@ function ProductPage({ onAddToCart }) {
 
           <button
             className="product-page__cart-btn"
-            onClick={() => onAddToCart?.(product)}
+            onClick={() => addItem(product)}
           >
             Add to cart
           </button>
