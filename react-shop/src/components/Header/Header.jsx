@@ -1,6 +1,6 @@
-
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { useCart } from '../../cart/useCart'
 import './Header.css'
 
 import logoAcc from '../../assets/header-asssets/acc.svg'
@@ -8,7 +8,9 @@ import logoArrow from '../../assets/header-asssets/Arrow.png'
 import logoBasket from '../../assets/header-asssets/basket.svg'
 import logoSearch from '../../assets/header-asssets/search.svg'
 
-function Header({ search, onSearchChange, cartCount, onCartClick }) {
+function Header({ search, onSearchChange }) {
+  const navigate = useNavigate()
+  const { totalCount } = useCart()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
@@ -80,14 +82,12 @@ function Header({ search, onSearchChange, cartCount, onCartClick }) {
         <button
           className="header__action-btn header__cart"
           aria-label="Shopping cart"
-          onClick={onCartClick}
+          onClick={() => navigate('/cart')}
         >
           <img src={logoBasket} alt="" />
 
-          {cartCount > 0 && (
-            <span className="header__badge">
-              {cartCount}
-            </span>
+          {totalCount > 0 && (
+            <span className="header__badge">{totalCount}</span>
           )}
         </button>
 
