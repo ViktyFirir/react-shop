@@ -1,14 +1,16 @@
 import { useReducer, useEffect, useMemo } from 'react'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import { CartContext } from './CartContext'
 import { cartReducer } from './cartReducer'
-import { loadCart, saveCart } from './cartStorage'
+import { sanitizeCart } from './cartStorage'
 
 export function CartProvider({ children }) {
-  const [items, dispatch] = useReducer(cartReducer, undefined, loadCart)
+  const [storedItems, setStoredItems] = useLocalStorage('cart', [], sanitizeCart)
+  const [items, dispatch] = useReducer(cartReducer, storedItems)
 
   useEffect(() => {
-    saveCart(items)
-  }, [items])
+    setStoredItems(items)
+  }, [items, setStoredItems])
 
   const value = useMemo(() => {
     let totalCount = 0
