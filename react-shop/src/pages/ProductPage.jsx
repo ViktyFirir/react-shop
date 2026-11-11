@@ -1,51 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useParams, Link } from 'react-router'
 import { useCart } from '../cart/useCart'
+import { useProduct } from '../hooks/useProduct'
 import './ProductPage.css'
 
 function ProductPage() {
   const { id } = useParams()
   const { addItem } = useCart()
-
-  const [product, setProduct] = useState(null)
-  const [activeImage, setActiveImage] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      setLoading(true)
-      setError(null)
-      setProduct(null)
-
-      try {
-        const response = await fetch(
-          `https://dummyjson.com/products/${id}`
-        )
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error('Product not found')
-          }
-
-          throw new Error('Failed to load product')
-        }
-
-        const data = await response.json()
-
-        setProduct(data)
-        setActiveImage(
-          data.images?.length ? data.images[0] : data.thumbnail
-        )
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchProduct()
-  }, [id])
+  const { product, loading, error } = useProduct(id)
+  const [selectedImage, setSelectedImage] = useState(null)
 
   if (loading) {
     return <p className="status">Loading product...</p>
@@ -62,9 +25,8 @@ function ProductPage() {
     )
   }
 
-  const images = product.images?.length
-    ? product.images
-    : [product.thumbnail]
+  const images = product.images?.length ? product.images : [product.thumbnail]
+  const activeImage = images.includes(selectedImage) ? selectedImage : images[0]
 
   return (
     <main className="product-page">
@@ -85,7 +47,7 @@ function ProductPage() {
                       ? 'product-page__thumb--active'
                       : ''
                   }`}
-                  onClick={() => setActiveImage(src)}
+                  onClick={() => setSelectedImage(src)}
                   aria-label="Select product image"
                 >
                   <img src={src} alt="" />
@@ -108,13 +70,9 @@ function ProductPage() {
             <span className="product-page__rating-max">/5</span>
           </div>
 
-          <p className="product-page__price">
-            ${product.price.toFixed(2)}
-          </p>
+          <p className="product-page__price">${product.price.toFixed(2)}</p>
 
-          <p className="product-page__description">
-            {product.description}
-          </p>
+          <p className="product-page__description">{product.description}</p>
 
           <button
             className="product-page__cart-btn"

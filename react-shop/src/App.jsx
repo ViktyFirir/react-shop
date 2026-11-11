@@ -1,10 +1,21 @@
+
 import { useState, useEffect } from 'react'
-import { Routes, Route, useNavigate, useSearchParams, useLocation } from 'react-router'
+import {
+  Routes,
+  Route,
+  useNavigate,
+  useSearchParams,
+  useLocation,
+} from 'react-router'
+
 import Header from './components/Header/Header'
 import CartPage from './pages/CartPage'
 import CatalogPage from './pages/CatalogPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ProductPage from './pages/ProductPage'
+
+import { useProducts } from './hooks/useProducts'
+import { useDebounce } from './hooks/useDebounce'
 
 import './App.css'
 
@@ -18,21 +29,21 @@ function App() {
   const sort = searchParams.get('sort') || 'default'
 
   const setSearch = (value) => {
-  const params = new URLSearchParams(searchParams)
+    const params = new URLSearchParams(searchParams)
 
-  if (value.trim()) {
-    params.set('q', value)
-  } else {
-    params.delete('q')
-  }
+    if (value.trim()) {
+      params.set('q', value)
+    } else {
+      params.delete('q')
+    }
 
-  if (location.pathname !== '/') {
-    const query = params.toString()
-    navigate(query ? `/?${query}` : '/')
-  } else {
-    setSearchParams(params, { replace: true })
+    if (location.pathname !== '/') {
+      const query = params.toString()
+      navigate(query ? `/?${query}` : '/', { replace: true })
+    } else {
+      setSearchParams(params, { replace: true })
+    }
   }
-}
 
   const setCategory = (value) => {
     const params = new URLSearchParams(searchParams)
@@ -58,36 +69,11 @@ function App() {
     setSearchParams(params)
   }
 
-  const [products, setProducts] = useState([])
+  const { products, loading, error } = useProducts()
   const [categories, setCategories] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
 
   const [priceMin, setPriceMin] = useState(null)
   const [priceMax, setPriceMax] = useState(null)
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch(
-          'https://dummyjson.com/products?limit=100'
-        )
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
-        const data = await response.json()
-        setProducts(data.products)
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchProducts()
-  }, [])
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -122,9 +108,11 @@ function App() {
   const currentMin = priceMin ?? bounds.min
   const currentMax = priceMax ?? bounds.max
 
+  const debouncedSearch = useDebounce(search, 300)
+
   const filteredProducts = products.filter(
     (product) =>
-      product.title.toLowerCase().includes(search.toLowerCase()) &&
+      product.title.toLowerCase().includes(debouncedSearch.toLowerCase()) &&
       (category === 'all' || product.category === category) &&
       product.price >= currentMin &&
       product.price <= currentMax
