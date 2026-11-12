@@ -4,12 +4,15 @@ import { HashRouter } from 'react-router'
 import './index.css'
 import App from './App.jsx'
 import { CartProvider } from './cart/CartProvider'
+import { FavoritesProvider } from './favorites/FavoritesProvider'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HashRouter>
       <CartProvider>
-        <App />
+        <FavoritesProvider>
+          <App />
+        </FavoritesProvider>
       </CartProvider>
     </HashRouter>
   </StrictMode>,
