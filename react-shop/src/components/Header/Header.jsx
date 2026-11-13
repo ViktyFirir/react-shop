@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useCart } from '../../cart/useCart'
+import { useFavorites } from '../../favorites/useFavorites'
 import './Header.css'
 
 import logoAcc from '../../assets/header-asssets/acc.svg'
@@ -11,6 +12,7 @@ import logoSearch from '../../assets/header-asssets/search.svg'
 function Header({ search, onSearchChange }) {
   const navigate = useNavigate()
   const { totalCount } = useCart()
+  const { totalCount: favoritesCount } = useFavorites()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
@@ -79,6 +81,20 @@ function Header({ search, onSearchChange }) {
       </div>
 
       <div className="header__actions">
+        <Link
+          to="/favorites"
+          className="header__action-btn header__favorites"
+          aria-label="Favorites"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.3 3 4.5 6.7 4.5c2 0 3.6 1 5.3 3 1.7-2 3.3-3 5.3-3 3.7 0 5.8 3.8 4.3 7.3C19.5 16.4 12 21 12 21z" />
+          </svg>
+
+          {favoritesCount > 0 && (
+            <span className="header__badge">{favoritesCount}</span>
+          )}
+        </Link>
+
         <button
           className="header__action-btn header__cart"
           aria-label="Shopping cart"
