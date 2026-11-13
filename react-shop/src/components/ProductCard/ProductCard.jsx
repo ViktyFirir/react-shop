@@ -1,7 +1,16 @@
 import { Link } from 'react-router'
 import './ProductCard.css'
 
-function ProductCard({ productId, title, price, rating, image, onAddToCart }) {
+function ProductCard({
+  productId,
+  title,
+  price,
+  rating,
+  image,
+  isFavorite,
+  onToggleFavorite,
+  onAddToCart,
+}) {
   return (
     <article className="product-card">
       <Link to={`/product/${productId}`} className="product-card__link">
@@ -17,6 +26,17 @@ function ProductCard({ productId, title, price, rating, image, onAddToCart }) {
 
         <p className="product-card__price">${price.toFixed(2)}</p>
       </Link>
+
+      <button
+        className={`product-card__fav ${
+          isFavorite ? 'product-card__fav--active' : ''
+        }`}
+        type="button"
+        aria-pressed={isFavorite}
+        onClick={onToggleFavorite}
+      >
+        {isFavorite ? '♥ In Favorites' : '♡ Add to Favorites'}
+      </button>
 
       <button
         className="product-card__btn"

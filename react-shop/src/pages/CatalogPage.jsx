@@ -1,6 +1,7 @@
 import Sidebar from '../components/Sidebar/Sidebar'
 import ProductCard from '../components/ProductCard/ProductCard'
 import { useCart } from '../cart/useCart'
+import { useFavorites } from '../favorites/useFavorites'
 
 function CatalogPage({
   categories,
@@ -18,6 +19,7 @@ function CatalogPage({
   error,
 }) {
   const { addItem } = useCart()
+  const { isFavorite, toggleFavorite } = useFavorites()
 
   return (
     <main className="main">
@@ -73,6 +75,8 @@ function CatalogPage({
                 price={product.price}
                 rating={product.rating}
                 image={product.thumbnail}
+                isFavorite={isFavorite(product.id)}
+                onToggleFavorite={() => toggleFavorite(product)}
                 onAddToCart={() => addItem(product)}
               />
             ))}
