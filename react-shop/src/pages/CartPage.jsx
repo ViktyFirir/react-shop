@@ -1,8 +1,9 @@
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { useCart } from '../cart/useCart'
 import './CartPage.css'
 
 function CartPage() {
+  const navigate = useNavigate()
   const { items, totalCount, totalPrice, changeQuantity, removeItem, clearCart } =
     useCart()
 
@@ -106,9 +107,9 @@ function CartPage() {
             <button
               className="checkout-button"
               type="button"
-              disabled
+              onClick={() => navigate('/checkout')}
             >
-              Continue
+              Checkout
               <span>→</span>
             </button>
           </aside>

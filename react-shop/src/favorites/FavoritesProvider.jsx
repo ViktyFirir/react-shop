@@ -10,21 +10,22 @@ export function FavoritesProvider({ children }) {
     const isFavorite = (id) => items.some((item) => item.id === id)
 
     const toggleFavorite = (product) => {
-      if (isFavorite(product.id)) {
-        setItems(items.filter((item) => item.id !== product.id))
-        return
-      }
+      setItems((prev) => {
+        if (prev.some((item) => item.id === product.id)) {
+          return prev.filter((item) => item.id !== product.id)
+        }
 
-      setItems([
-        ...items,
-        {
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          rating: product.rating,
-          thumbnail: product.thumbnail,
-        },
-      ])
+        return [
+          ...prev,
+          {
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            rating: product.rating,
+            thumbnail: product.thumbnail,
+          },
+        ]
+      })
     }
 
     return { items, totalCount: items.length, isFavorite, toggleFavorite }
