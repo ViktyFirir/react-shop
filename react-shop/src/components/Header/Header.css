@@ -126,7 +126,21 @@
   height: 24px;
   display: block;
 }
-.header__cart { position: relative; }
+
+.header__cart,
+.header__favorites {
+  position: relative;
+}
+
+.header__favorites svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  color: var(--color-text);
+}
 
 .header__badge {
   position: absolute;
@@ -142,6 +156,7 @@
   line-height: 18px;
   text-align: center;
 }
+
 @media (max-width: 1023px) {
   .header {
     flex-wrap: wrap;

@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router'
 import { useCart } from '../cart/useCart'
+import { useFavorites } from '../favorites/useFavorites'
 import { useProduct } from '../hooks/useProduct'
 import './ProductPage.css'
 
 function ProductPage() {
   const { id } = useParams()
   const { addItem } = useCart()
+  const { isFavorite, toggleFavorite } = useFavorites()
   const { product, loading, error } = useProduct(id)
   const [selectedImage, setSelectedImage] = useState(null)
 
@@ -73,6 +75,17 @@ function ProductPage() {
           <p className="product-page__price">${product.price.toFixed(2)}</p>
 
           <p className="product-page__description">{product.description}</p>
+
+          <button
+            className={`product-page__fav-btn ${
+              isFavorite(product.id) ? 'product-page__fav-btn--active' : ''
+            }`}
+            type="button"
+            aria-pressed={isFavorite(product.id)}
+            onClick={() => toggleFavorite(product)}
+          >
+            {isFavorite(product.id) ? '♥ In Favorites' : '♡ Add to Favorites'}
+          </button>
 
           <button
             className="product-page__cart-btn"
