@@ -10,6 +10,7 @@ import {
 import Header from './components/Header/Header'
 import CartPage from './pages/CartPage'
 import CatalogPage from './pages/CatalogPage'
+import CheckoutPage from './pages/CheckoutPage'
 import FavoritesPage from './pages/FavoritesPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ProductPage from './pages/ProductPage'
@@ -154,6 +155,7 @@ function App() {
 
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
