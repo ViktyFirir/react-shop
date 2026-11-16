@@ -13,6 +13,7 @@ import CatalogPage from './pages/CatalogPage'
 import CheckoutPage from './pages/CheckoutPage'
 import FavoritesPage from './pages/FavoritesPage'
 import NotFoundPage from './pages/NotFoundPage'
+import OrderSuccessPage from './pages/OrderSuccessPage'
 import ProductPage from './pages/ProductPage'
 
 import { useProducts } from './hooks/useProducts'
@@ -156,6 +157,7 @@ function App() {
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order/:orderNumber" element={<OrderSuccessPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

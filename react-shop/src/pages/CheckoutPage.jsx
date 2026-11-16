@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Navigate, useNavigate } from 'react-router'
 import { useCart } from '../cart/useCart'
 import { validate } from '../checkout/validate'
 import './CartPage.css'
@@ -20,12 +21,18 @@ const EMPTY_VALUES = { name: '', phone: '', email: '', address: '' }
 const ALL_TOUCHED = { name: true, phone: true, email: true, address: true }
 
 function CheckoutPage() {
-  const { items, totalCount, totalPrice } = useCart()
+  const navigate = useNavigate()
+  const { items, totalCount, totalPrice, clearCart } = useCart()
   const [values, setValues] = useState(EMPTY_VALUES)
   const [touched, setTouched] = useState({})
+  const [isOrderPlaced, setIsOrderPlaced] = useState(false)
 
   const errors = validate(values)
   const isValid = Object.keys(errors).length === 0
+
+  if (items.length === 0 && !isOrderPlaced) {
+    return <Navigate to="/cart" replace />
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -42,6 +49,12 @@ function CheckoutPage() {
     setTouched(ALL_TOUCHED)
 
     if (!isValid) return
+
+    const orderNumber = String(Date.now()).slice(-8)
+
+    setIsOrderPlaced(true)
+    clearCart()
+    navigate(`/order/${orderNumber}`)
   }
 
   return (
